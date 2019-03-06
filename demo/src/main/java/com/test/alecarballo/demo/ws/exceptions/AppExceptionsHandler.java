@@ -12,34 +12,29 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.test.alecarballo.demo.controller.model.response.ErrorMessage;
 
-
-
 @ControllerAdvice
 public class AppExceptionsHandler extends ResponseEntityExceptionHandler {
-	
-	
-	@ExceptionHandler(value= {Exception.class})
-	public ResponseEntity<Object> handlyAnyException (Exception ex, WebRequest request){
-		
+
+	@ExceptionHandler(value = { Exception.class })
+	public ResponseEntity<Object> handlyAnyException(Exception ex, WebRequest request) {
+
 		String errroMessageDescription = ex.getLocalizedMessage();
-		if(errroMessageDescription == null)errroMessageDescription = ex.toString();
-		
-		
+		if (errroMessageDescription == null)
+			errroMessageDescription = ex.toString();
+
 		ErrorMessage errormessage = new ErrorMessage(new Date(), ex.getLocalizedMessage());
-		return new ResponseEntity<>(errormessage, new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errormessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	
-	
-	@ExceptionHandler(value= {NullPointerException.class})
-	public ResponseEntity<Object> handleNullPointerException (NullPointerException ex, WebRequest request){
-		
+
+	@ExceptionHandler(value = { UserServicesException.class, NullPointerException.class })
+	public ResponseEntity<Object> handleSpecificException(Exception ex, WebRequest request) {
+
 		String errroMessageDescription = ex.getLocalizedMessage();
-		if(errroMessageDescription == null)errroMessageDescription = ex.toString();
-		
-		
+		if (errroMessageDescription == null)
+			errroMessageDescription = ex.toString();
+
 		ErrorMessage errormessage = new ErrorMessage(new Date(), ex.getLocalizedMessage());
-		return new ResponseEntity<>(errormessage, new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errormessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
